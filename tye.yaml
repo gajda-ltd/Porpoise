@@ -1,27 +1,32 @@
 name: PorpoiseApp
 services:
-- name: api
-  project: src/Porpoise.WebApi/Porpoise.WebApi.csproj
-  bindings:
-  - port: 5443
-    protocol: https
-- name: db
-  image: postgres:latest
-  env:
-    - name: POSTGRES_DB
-      value: porpoise
-    - name: POSTGRES_PASSWORD
-      value: P@ssw0rd
-    - name: POSTGRES_USER
-      value: user
-  bindings:
-  - port: 5432
-    connectionString: Server=${host};Port=${port};Database=porpoise;User Id=user;Password=P@ssw0rd;
-- name: seq
-  image: datalust/seq:latest
-  env:
-  - name: ACCEPT_EULA
-    value: Y
-  bindings:
-  - port: 5341
-    protocol: http
+  - name: api
+    project: src/Porpoise.WebApi/Porpoise.WebApi.csproj
+    bindings:
+      - port: 5443
+        protocol: https
+  - name: ui
+    dockerFile: src/frontend/Dockerfile
+    bindings:
+      - protocol: http
+        port: 80
+  - name: db
+    image: postgres:latest
+    env:
+      - name: POSTGRES_DB
+        value: porpoise
+      - name: POSTGRES_PASSWORD
+        value: P@ssw0rd
+      - name: POSTGRES_USER
+        value: user
+    bindings:
+      - port: 5432
+        connectionString: Server=${host};Port=${port};Database=porpoise;User Id=user;Password=P@ssw0rd;
+  - name: seq
+    image: datalust/seq:latest
+    env:
+      - name: ACCEPT_EULA
+        value: Y
+    bindings:
+      - port: 5341
+        protocol: http
