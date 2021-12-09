@@ -13,12 +13,20 @@ builder.Host.UseSerilog((ctx, lc) => lc
     );
 
 // Add services to the container.
-builder.Services.AddCors(options => options.AddPolicy(name: "Default", policy => policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost").AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
+builder.Services.AddCors(options =>
+  options.AddPolicy(name: "Default", policy =>
+    policy.SetIsOriginAllowed(origin =>
+      new Uri(origin).Host == "localhost")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials()
+      )
+    );
 
 builder.Services.AddMarten(options =>
 {
-  options.Connection(builder.Configuration.GetConnectionString("db"));
-  options.AutoCreateSchemaObjects = AutoCreate.All;
+    options.Connection(builder.Configuration.GetConnectionString("db"));
+    options.AutoCreateSchemaObjects = AutoCreate.All;
 });
 
 builder.Services.AddSingleton<IPersonRepository, PersonRepository>();
@@ -34,8 +42,8 @@ app.UseCors("Default");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger();
-  app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -44,4 +52,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
